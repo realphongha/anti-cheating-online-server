@@ -241,6 +241,7 @@ def update_class(current_user, id):
     name = data.get("name", None)
     start = data.get("start", None)
     last = data.get("last", None)
+    settings = data.get("settings", None)
     name = name.strip() if name else None
     if name and (len(name) < 3 or len(name) > 50):
         return {
@@ -258,14 +259,22 @@ def update_class(current_user, id):
         return {
             "message": "Thời gian thi phải từ 5 phút tới 3600 phút!"
         }, 400
+    if settings:
+        for attr in ('track_laptop', 'track_mouse', 
+            'track_keyboard', 'track_person'):
+            if type(settings.get(attr, None)) != bool:
+                return {
+                    "message": "Cấu hình giám sát không hợp lệ!"
+                }, 400
     update_obj = dict()
-    if name is None and start is None and last is None:
+    if name is None and start is None and last is None and settings is None:
         return {
             "message": "Vui lòng nhập thông tin để cập nhật!"
         }, 400
     if name: update_obj["name"] = name
     if start: update_obj["start"] = start
     if last: update_obj["last"] = int(last)
+    if settings: update_obj["settings"] = settings
     result = mongo.db.classes.update_one({
             "_id": ObjectId(id),
             "supervisor_id": current_user["_id"]
