@@ -2,6 +2,7 @@ import json
 import pymongo
 import dateutil
 import datetime
+import uuid
 from dateutil import parser
 from bson.objectid import ObjectId
 from bson import json_util
@@ -23,7 +24,8 @@ def handle_image(current_user, json, methods=["GET", "POST"]):
         socketio.emit("handle_image", {
                 "image": json["image"],
                 "student_id": str(current_user["_id"]),
-                "class_id": json["class_id"]
+                "class_id": json["class_id"],
+                "uuid": str(uuid.uuid1())
             }, to=[json["supervisor_sid"]])
 
 
@@ -35,12 +37,14 @@ def handle_cheating_image(current_user, json, methods=["GET", "POST"]):
             'message' : 'Không có quyền!'
         }, 401
     if "supervisor_sid" in json and "image" in json \
-        and "type" in json:
+        and "type" in json and "note" in json:
         socketio.emit("handle_cheating_image", {
                 "image": json["image"],
                 "student_id": str(current_user["_id"]),
                 "class_id": json["class_id"],
-                "type": json["type"]
+                "type": json["type"],
+                "note": json["note"],
+                "uuid": str(uuid.uuid1())
             }, to=[json["supervisor_sid"]])
 
 

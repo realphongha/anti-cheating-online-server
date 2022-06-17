@@ -50,9 +50,11 @@ def standardize_json(class_):
     if "cheatings" in class_:
         new_cheatings = []
         for cheating_id in class_["cheatings"]:
-            cheating = mongo.db.cheatings.find_one_or_404({
+            cheating = mongo.db.cheatings.find_one({
                 "_id": cheating_id,
             })
+            if cheating is None:
+                continue
             cheating["id"] = str(cheating["_id"])
             del cheating["_id"]
             try:
