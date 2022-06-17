@@ -1,4 +1,4 @@
-Flask==1.1.2
+Flask==2.1.1
 pymongo==4.1.1
 pyyaml==6.0
 Flask-PyMongo==2.3.0
@@ -7,3 +7,5 @@ flask-cors==3.0.10
 flask-socketio==5.2.0
 simple-websocket==0.5.2
 eventlet==0.33.1
+python-dateutil==2.8.2
+pytz==2022.1
