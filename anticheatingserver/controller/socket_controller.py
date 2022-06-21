@@ -72,7 +72,8 @@ def handle_end_request(current_user, json, methods=["GET", "POST"]):
             })
             socketio.emit("handle_end_request", {
                 "type": "reply",
-                "accept": json["accept"]
+                "accept": json["accept"],
+                "sid": request.sid
             }, room=[json["sid"]])
 
 
