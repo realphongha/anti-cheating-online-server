@@ -23,8 +23,6 @@ def standardize_json(class_):
         del class_["supervisor"]["password"]
     class_["id"] = str(class_["_id"])
     del class_["_id"]
-    class_["start"] = str(class_["start"])
-    class_["end"] = str(class_["end"]) if class_["end"] else None
 
     # get students:
     if "students" in class_:

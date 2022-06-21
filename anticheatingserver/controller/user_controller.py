@@ -17,7 +17,6 @@ def standardize_json(user):
     user["id"] = str(user["_id"])
     del user["_id"]
     user["updated_by"] = str(user["updated_by"])
-    user["last_updated"] = str(user["last_updated"])
     del user["password"]
 
 
