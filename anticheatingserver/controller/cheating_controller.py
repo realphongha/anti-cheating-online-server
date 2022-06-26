@@ -1,8 +1,6 @@
 import json
 import datetime
 import os
-import pytz
-from dateutil import parser
 from bson.objectid import ObjectId
 from bson import json_util
 from flask import request
@@ -31,7 +29,7 @@ def create_cheating(current_user):
         image.seek(0)
         image = image.read()
     if student_id is None or class_id is None or \
-        note is None or image is None:
+        note is None:
         return {
             "message": "Vui lòng nhập đầy đủ các trường thông tin!"
         }, 400

@@ -1,13 +1,11 @@
 import json
 import pymongo
-import dateutil
 from dateutil import parser
 from bson.objectid import ObjectId
 from bson import json_util
 from flask import request
 from .. import app, mongo
-from ..utils.auth import hash_password, check_password
-from ..utils.auth import token_required, make_token, decode_token
+from ..utils.auth import token_required
 from ..utils.constants import *
 from ..utils.string import validate_email
 

@@ -1,9 +1,5 @@
-import json
-import pymongo
-import dateutil
 import datetime
 import uuid
-from dateutil import parser
 from bson.objectid import ObjectId
 from bson import json_util
 from flask import request
