@@ -384,15 +384,15 @@ def delete_students_in_class(current_user):
         return {
             "message": "Không tìm được lớp!"
         }, 404
-    if ObjectId(student_id) in class_["student"]:
-        class_["student"].remove(ObjectId(student_id))
+    if ObjectId(student_id) in class_["students"]:
+        class_["students"].remove(ObjectId(student_id))
         result = mongo.db.classes.update_one({
             "_id": ObjectId(class_id),
             "supervisor_id": current_user["_id"],
             "status": CLASS_STATUS_ACTIVE
         }, {
             "$set": {
-                "students": class_["student"]
+                "students": class_["students"]
             }
         })
     else:
