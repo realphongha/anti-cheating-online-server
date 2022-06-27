@@ -364,6 +364,46 @@ def add_students_to_class(current_user, id):
     }, 200
 
 
+@app.route("/classes/add_students", methods=["DELETE"])
+@token_required(role=("supervisor",))
+def delete_students_in_class(current_user):
+    data = request.data
+    data = json.loads(data)
+    class_id = data.get("class_id", None)
+    student_id = data.get("student_id", None)
+    if class_id is None or student_id is None:
+        return {
+            "message": "Vui lòng nhập đủ thông tin!"
+        }, 400
+    class_ = mongo.db.classes.find_one({
+        "_id": ObjectId(class_id),
+        "supervisor_id": current_user["_id"],
+        "status": CLASS_STATUS_ACTIVE
+    })
+    if class_ is None:
+        return {
+            "message": "Không tìm được lớp!"
+        }, 404
+    if ObjectId(student_id) in class_["student"]:
+        class_["student"].remove(ObjectId(student_id))
+        result = mongo.db.classes.update_one({
+            "_id": ObjectId(class_id),
+            "supervisor_id": current_user["_id"],
+            "status": CLASS_STATUS_ACTIVE
+        }, {
+            "$set": {
+                "students": class_["student"]
+            }
+        })
+    else:
+        return {
+            "message": "Không tìm được học sinh!"
+        }, 404
+    return {
+        "message": "Thành công!"
+    }, 200
+
+
 @app.route("/student/classes", methods=["GET"])
 @token_required(role=("student"))
 def get_list_classes_student(current_user):
