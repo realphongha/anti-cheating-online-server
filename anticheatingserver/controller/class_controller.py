@@ -364,7 +364,7 @@ def add_students_to_class(current_user, id):
     }, 200
 
 
-@app.route("/classes/add_students", methods=["DELETE"])
+@app.route("/classes/delete_student", methods=["DELETE"])
 @token_required(role=("supervisor",))
 def delete_students_in_class(current_user):
     data = request.data
