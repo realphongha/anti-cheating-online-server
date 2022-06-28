@@ -1,5 +1,6 @@
 import json
 import pymongo
+import datetime
 from dateutil import parser
 from bson.objectid import ObjectId
 from bson import json_util
@@ -321,6 +322,14 @@ def add_students_to_class(current_user, id):
         return {
             "message": "Không tìm được lớp!"
         }, 404
+
+    start = class_["start"]
+    now = datetime.datetime.utcnow()
+    if now > start:
+        return {
+            "message": "Chỉ có thể thêm trước giờ thi!"
+        }, 401
+
     emails = data.get("emails", None)
     if not emails or type(emails) != list:
         return {
@@ -384,6 +393,12 @@ def delete_students_in_class(current_user):
         return {
             "message": "Không tìm được lớp!"
         }, 404
+    start = class_["start"]
+    now = datetime.datetime.utcnow()
+    if now > start:
+        return {
+            "message": "Chỉ có thể thêm trước giờ thi!"
+        }, 401
     if ObjectId(student_id) in class_["students"]:
         class_["students"].remove(ObjectId(student_id))
         result = mongo.db.classes.update_one({
