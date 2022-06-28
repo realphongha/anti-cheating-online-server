@@ -397,7 +397,7 @@ def delete_students_in_class(current_user):
     now = datetime.datetime.utcnow()
     if now > start:
         return {
-            "message": "Chỉ có thể thêm trước giờ thi!"
+            "message": "Chỉ có thể xóa trước giờ thi!"
         }, 401
     if ObjectId(student_id) in class_["students"]:
         class_["students"].remove(ObjectId(student_id))
