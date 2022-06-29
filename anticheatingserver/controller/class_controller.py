@@ -33,7 +33,7 @@ def standardize_json(class_):
                 "role": USER_ROLE_STUDENT
             }, {
                 "email": 1,
-                "name": 1, 
+                "name": 1,
                 "phone": 1,
                 "avatar": 1
             })
@@ -120,7 +120,7 @@ def get_list_classes(current_user):
         }},
         {'$unwind': '$supervisor_id'},
     ]
-    
+
     if q_filter:
         aggregation.append({'$match': q_filter})
     if q_sort:
@@ -201,6 +201,8 @@ def create_class(current_user):
             "message": "Tên lớp thi phải từ 3 tới 50 ký tự!"
         }, 400
     try:
+        if "$date" in start:
+            start = start["$date"]
         start = parser.parse(start)
     except:
         return {
@@ -247,6 +249,8 @@ def update_class(current_user, id):
             "message": "Tên lớp thi phải từ 3 tới 50 ký tự!"
         }, 400
     if start:
+        if "$date" in start:
+            start = start["$date"]
         try:
             start = parser.parse(start)
         except:
@@ -259,7 +263,7 @@ def update_class(current_user, id):
             "message": "Thời gian thi phải từ 5 phút tới 3600 phút!"
         }, 400
     if settings:
-        for attr in ('track_laptop', 'track_mouse', 
+        for attr in ('track_laptop', 'track_mouse',
             'track_keyboard', 'track_person'):
             if type(settings.get(attr, None)) != bool:
                 return {
@@ -474,7 +478,7 @@ def get_list_classes_student(current_user):
                 "end": class_["class"]["end"] if class_["class"]["end"] else None,
                 "settings": class_["class"]["settings"],
                 "name": class_["class"]["name"]
-            })     
+            })
     count_classes = len(return_classes)
     if first is not None and last is not None:
         return_classes = return_classes[first:last]
