@@ -340,6 +340,7 @@ def add_students_to_class(current_user, id):
             "message": "Danh sách email học sinh cần thêm không đúng định dạng!"
         }, 400
     ids = list()
+    ids_added = list()
     for email in emails:
         if not validate_email(email):
             return {
@@ -356,7 +357,9 @@ def add_students_to_class(current_user, id):
             return {
                 "message": "Không tìm thấy học sinh với email %s!" % (email)
             }, 404
-        ids.append(student["_id"]);
+        ids.append(student["_id"])
+        if student["_id"] not in class_["students"]:
+            ids_added.append(student["_id"])
     ids.extend(class_["students"])
     ids = list(set(ids))
     if ids == class_["students"]:
@@ -371,6 +374,11 @@ def add_students_to_class(current_user, id):
             "$set": {
                 "students": ids
             }
+        })
+    for i in ids_added:
+        result = mongo.db.student_class.insert_one({
+            "student_id": i,
+            "class_id": ObjectId(id)
         })
     return {
         "message": "Thành công!"
@@ -413,6 +421,10 @@ def delete_students_in_class(current_user):
             "$set": {
                 "students": class_["students"]
             }
+        })
+        result = mongo.db.student_class.delete_one({
+            "student_id": ObjectId(student_id),
+            "class_id": ObjectId(class_id)
         })
     else:
         return {
