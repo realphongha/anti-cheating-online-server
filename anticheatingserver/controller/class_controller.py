@@ -70,7 +70,7 @@ def get_list_classes(current_user):
     q_sort = query.get("sort")
     if q_sort:
         q_sort = json.loads(q_sort)
-        date_i = q_sort[0].index(".$date")
+        date_i = q_sort[0].find(".$date")
         if date_i != -1:
             q_sort[0] = q_sort[0][:date_i]
         if q_sort[1].lower() == "asc":
