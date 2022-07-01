@@ -1,6 +1,7 @@
 import json
 import pymongo
 import datetime
+import pytz
 from dateutil import parser
 from bson.objectid import ObjectId
 from bson import json_util
@@ -208,7 +209,7 @@ def create_class(current_user):
         return {
             "message": "Thời gian bắt đầu thi không đúng định dạng!"
         }, 400
-    if datetime.datetime.utcnow() > start:
+    if datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) > start:
         return {
             "message": "Thời gian thi phải trong tương lai!"
         }, 403
@@ -261,7 +262,7 @@ def update_class(current_user, id):
             return {
                 "message": "Thời gian bắt đầu thi không đúng định dạng!"
             }, 400
-        if datetime.datetime.utcnow() > start:
+        if datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) > start:
             return {
                 "message": "Không thể cập nhật sau khi thi!"
             }, 403
