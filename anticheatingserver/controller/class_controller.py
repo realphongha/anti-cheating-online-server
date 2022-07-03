@@ -283,7 +283,7 @@ def update_class(current_user, id):
         "_id": ObjectId(id),
         "supervisor_id": current_user["_id"]
     })
-    if datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) > class_["start"]:
+    if datetime.datetime.utcnow() > class_["start"]:
         return {
             "message": "Không thể cập nhật sau khi thi!"
         }, 403
