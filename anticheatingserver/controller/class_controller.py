@@ -262,10 +262,6 @@ def update_class(current_user, id):
             return {
                 "message": "Thời gian bắt đầu thi không đúng định dạng!"
             }, 400
-        if datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) > start:
-            return {
-                "message": "Không thể cập nhật sau khi thi!"
-            }, 403
     last = int(last) if last else None
     if last and (last < 5 and last > 3600):
         return {
@@ -283,6 +279,14 @@ def update_class(current_user, id):
         return {
             "message": "Vui lòng nhập thông tin để cập nhật!"
         }, 400
+    class_ = mongo.db.classes.find_one_or_404({
+        "_id": ObjectId(id),
+        "supervisor_id": current_user["_id"]
+    })
+    if datetime.datetime.utcnow().replace(tzinfo=pytz.UTC) > class_["start"]:
+        return {
+            "message": "Không thể cập nhật sau khi thi!"
+        }, 403
     if name: update_obj["name"] = name
     if start: update_obj["start"] = start
     if last: update_obj["last"] = int(last)
