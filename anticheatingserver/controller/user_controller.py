@@ -21,7 +21,7 @@ def standardize_json(user):
 
 @app.route("/login", methods=["POST"])
 def login():
-    data = json.loads(request.data) 
+    data = json.loads(request.data)
     email = data.get("email", None)
     password = data.get("password", None)
     if not email or not password:
@@ -33,12 +33,12 @@ def login():
         return {
             "message": "Email không hợp lệ!"
         }, 400
-    
+
     if len(password) < 6 or len(password) > 20:
         return {
             "message": "Password phải dài từ 6 tới 20 ký tự!"
         }, 400
-    user = mongo.db.users.find_one({"email": email, 
+    user = mongo.db.users.find_one({"email": email,
         "status": USER_STATUS_ACTIVE
     })
     if user is None:
@@ -50,7 +50,7 @@ def login():
     if check_password(true_password, password):
         token = make_token(user["id"]).decode('UTF-8')
         return json_util.dumps({
-                "user": user, 
+                "user": user,
                 "token": token
             })
     return {
@@ -116,8 +116,8 @@ def register():
     user = mongo.db.users.find_one_or_404({"_id": ObjectId(result.inserted_id)})
     standardize_json(user)
     return json_util.dumps(user)
-    
-    
+
+
 @app.route("/users/get_current", methods=["GET"])
 @token_required(role=("all",))
 def get_current_user(current_user):
@@ -152,7 +152,7 @@ def edit_current_user(current_user):
         return {
             "message": "Email không hợp lệ!"
         }, 400
-    if password and (len(password) < 6 or len(password)) > 20:
+    if password and (len(password) < 6 or len(password) > 20):
         return {
             "message": "Password phải dài từ 6 tới 20 ký tự!"
         }, 400
@@ -199,7 +199,7 @@ def change_avatar(current_user):
         if size > MAX_SIZE_AVATAR:
             return {
                 "message": "Ảnh đại diện phải nhỏ hơn 1MB!"
-            }, 400 
+            }, 400
         img.seek(0)
         raw_img = img.read()
         result = mongo.db.users.update_one({
@@ -215,7 +215,7 @@ def change_avatar(current_user):
     else:
         return {
             "message": "Vui lòng upload ảnh đại diện mới!"
-        }, 400 
+        }, 400
 
 
 @app.route("/users", methods=["GET"])
@@ -372,7 +372,7 @@ def update_user(current_user, id):
             "message": "Số điện thoại phải dài 10 ký tự!"
         }, 400
     role = int(role) if role else None
-    if role not in (USER_ROLE_ADMIN, USER_ROLE_STUDENT, 
+    if role not in (USER_ROLE_ADMIN, USER_ROLE_STUDENT,
         USER_ROLE_SUPERVISOR):
         return {
             "message": "Không thể tạo loại tài khoản này!"
