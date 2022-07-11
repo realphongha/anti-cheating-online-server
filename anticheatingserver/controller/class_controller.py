@@ -258,7 +258,12 @@ def update_class(current_user, id):
             start = start["$date"]
         try:
             start = parser.parse(start)
-        except:
+            if start < datetime.datetime.utcnow().replace(tzinfo=pytz.UTC):
+                return {
+                    "message": "Thời gian thi phải bắt đầu trong tương lai!"
+                }, 400
+        except Exception as e:
+            print(e)
             return {
                 "message": "Thời gian bắt đầu thi không đúng định dạng!"
             }, 400
