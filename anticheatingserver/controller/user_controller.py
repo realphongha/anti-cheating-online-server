@@ -312,7 +312,7 @@ def create_user(current_user):
             "message": "Số điện thoại phải dài 10 ký tự!"
         }, 400
     role = int(role)
-    if role not in (USER_ROLE_STUDENT, USER_ROLE_SUPERVISOR):
+    if role not in (USER_ROLE_STUDENT, USER_ROLE_SUPERVISOR, USER_ROLE_ADMIN):
         return {
             "message": "Không thể tạo loại tài khoản này!"
         }, 400
