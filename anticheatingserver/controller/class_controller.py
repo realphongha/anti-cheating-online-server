@@ -380,6 +380,10 @@ def add_students_to_class(current_user, id):
             ids_added.append(student["_id"])
     ids.extend(class_["students"])
     ids = list(set(ids))
+    if len(ids) > 60:
+        return {
+            "message": "Không thể có nhiều hơn 60 học sinh trong lớp!"
+        }, 400
     if ids == class_["students"]:
         return {
             "message": "Các email đã tồn tại!"
