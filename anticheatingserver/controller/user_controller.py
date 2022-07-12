@@ -157,7 +157,7 @@ def edit_current_user(current_user):
             "message": "Password phải dài từ 6 tới 20 ký tự!"
         }, 400
     name = name.strip() if name else None
-    if name and (len(name) < 3 or len(name)) > 100:
+    if name and (len(name) < 3 or len(name) > 100):
         return {
             "message": "Họ tên phải dài từ 3 tới 100 ký tự!"
         }, 400
