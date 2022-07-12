@@ -244,11 +244,7 @@ def create_class(current_user):
         "status": CLASS_STATUS_ACTIVE
     })
     c = mongo.db.classes.find_one_or_404({"_id": ObjectId(result.inserted_id)})
-    res = standardize_json(c)
-    if not res:
-        return {
-            "message": "Lớp thi không hợp lệ!"
-        }, 400
+    standardize_json(c)
     return json_util.dumps(c)
 
 
