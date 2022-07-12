@@ -18,12 +18,11 @@ def standardize_json_user(user):
 
 
 def standardize_json(class_):
-    if "supervisor" in class_ and type(class_["supervisor"]) == list and \
-            len(class_["supervisor"]) == 1:
+    if "supervisor" in class_ and type(class_["supervisor"]) == list:
+        if len(class_["supervisor"]) != 1:
+            return False
         class_["supervisor"] = class_["supervisor"][0]
         del class_["supervisor"]["password"]
-    else:
-        return False
     class_["id"] = str(class_["_id"])
     del class_["_id"]
 
