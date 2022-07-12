@@ -18,9 +18,12 @@ def standardize_json_user(user):
 
 
 def standardize_json(class_):
-    if "supervisor" in class_ and type(class_["supervisor"]) == list:
+    if "supervisor" in class_ and type(class_["supervisor"]) == list and \
+            len(class_["supervisor"]) == 1:
         class_["supervisor"] = class_["supervisor"][0]
         del class_["supervisor"]["password"]
+    else:
+        return False
     class_["id"] = str(class_["_id"])
     del class_["_id"]
 
@@ -62,6 +65,7 @@ def standardize_json(class_):
             del cheating["student_id"]
             new_cheatings.append(cheating)
         class_["cheatings"] = new_cheatings
+    return True
 
 
 @app.route("/classes", methods=["GET"])
@@ -138,8 +142,9 @@ def get_list_classes(current_user):
         count_classes = mongo.db.classes.count_documents({})
     result = []
     for class_ in classes:
-        standardize_json(class_)
-        result.append(class_)
+        res = standardize_json(class_)
+        if res:
+            result.append(class_)
     first = first if first else 0
     last = first + len(result)
     return json_util.dumps(result), 200, {
@@ -180,7 +185,11 @@ def get_one_class(current_user, id):
         return {
             "message": "Không thể lấy thông tin lớp thi này!"
         }, 401
-    standardize_json(class_)
+    res = standardize_json(class_)
+    if not res:
+        return {
+            "message": "Lớp thi không hợp lệ!"
+        }, 400
     return json_util.dumps(class_)
 
 
@@ -235,7 +244,11 @@ def create_class(current_user):
         "status": CLASS_STATUS_ACTIVE
     })
     c = mongo.db.classes.find_one_or_404({"_id": ObjectId(result.inserted_id)})
-    standardize_json(c)
+    res = standardize_json(c)
+    if not res:
+        return {
+            "message": "Lớp thi không hợp lệ!"
+        }, 400
     return json_util.dumps(c)
 
 
