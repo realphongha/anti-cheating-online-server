@@ -357,12 +357,12 @@ def update_user(current_user, id):
         return {
             "message": "Email không hợp lệ!"
         }, 400
-    if password and (len(password) < 6 or len(password)) > 20:
+    if password and (len(password) < 6 or len(password) > 20):
         return {
             "message": "Password phải dài từ 6 tới 20 ký tự!"
         }, 400
     name = name.strip() if name else None
-    if name and (len(name) < 3 or len(name)) > 100:
+    if name and (len(name) < 3 or len(name) > 100):
         return {
             "message": "Họ tên phải dài từ 3 tới 100 ký tự!"
         }, 400
