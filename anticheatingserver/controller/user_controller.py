@@ -102,17 +102,22 @@ def register():
         return {
             "message": "Không thể tạo loại tài khoản này!"
         }, 400
-    result = mongo.db.users.insert_one({
-        "email": email,
-        "password": h_password,
-        "name": name,
-        "phone": phone,
-        "role": role,
-        "avatar": "",
-        "status": USER_STATUS_ACTIVE,
-        "last_updated": datetime.datetime.utcnow(),
-        "updated_by": None
-    })
+    try:
+        result = mongo.db.users.insert_one({
+            "email": email,
+            "password": h_password,
+            "name": name,
+            "phone": phone,
+            "role": role,
+            "avatar": "",
+            "status": USER_STATUS_ACTIVE,
+            "last_updated": datetime.datetime.utcnow(),
+            "updated_by": None
+        })
+    except pymongo.errors.DuplicateKeyError:
+        return {
+            "message": "Email đã tồn tại!"
+        }, 400
     user = mongo.db.users.find_one_or_404({"_id": ObjectId(result.inserted_id)})
     standardize_json(user)
     return json_util.dumps(user)
@@ -178,11 +183,16 @@ def edit_current_user(current_user):
     if h_password: update_obj["password"] = h_password
     if name: update_obj["name"] = name
     if phone: update_obj["phone"] = phone
-    result = mongo.db.users.update_one({
-            "_id": current_user["_id"]
-        }, {
-            "$set": update_obj
-        })
+    try:
+        result = mongo.db.users.update_one({
+                "_id": current_user["_id"]
+            }, {
+                "$set": update_obj
+            })
+    except pymongo.errors.DuplicateKeyError:
+        return {
+            "message": "Email đã tồn tại!"
+        }, 400
     user = mongo.db.users.find_one_or_404({"_id": current_user["_id"]})
     standardize_json(user)
     return json_util.dumps(user)
@@ -316,17 +326,22 @@ def create_user(current_user):
         return {
             "message": "Không thể tạo loại tài khoản này!"
         }, 400
-    result = mongo.db.users.insert_one({
-        "email": email,
-        "password": h_password,
-        "name": name,
-        "phone": phone,
-        "role": int(role),
-        "avatar": "",
-        "status": USER_STATUS_ACTIVE,
-        "last_updated": datetime.datetime.utcnow(),
-        "updated_by": ObjectId("6284a2371e3a28c2d8418e0e")
-    })
+    try:
+        result = mongo.db.users.insert_one({
+            "email": email,
+            "password": h_password,
+            "name": name,
+            "phone": phone,
+            "role": int(role),
+            "avatar": "",
+            "status": USER_STATUS_ACTIVE,
+            "last_updated": datetime.datetime.utcnow(),
+            "updated_by": ObjectId("6284a2371e3a28c2d8418e0e")
+        })
+    except pymongo.errors.DuplicateKeyError:
+        return {
+            "message": "Email đã tồn tại!"
+        }, 400
     user = mongo.db.users.find_one_or_404({"_id": ObjectId(result.inserted_id)})
     standardize_json(user)
     return json_util.dumps(user)
@@ -388,11 +403,16 @@ def update_user(current_user, id):
     if role: update_obj["role"] = int(role)
     if status: update_obj["status"] = status
     if avatar: update_obj["avatar"] = avatar
-    result = mongo.db.users.update_one({
-            "_id": ObjectId(id)
-        }, {
-            "$set": update_obj
-        })
+    try:
+        result = mongo.db.users.update_one({
+                "_id": ObjectId(id)
+            }, {
+                "$set": update_obj
+            })
+    except pymongo.errors.DuplicateKeyError:
+        return {
+            "message": "Email đã tồn tại!"
+        }, 400
     user = mongo.db.users.find_one_or_404({"_id": ObjectId(id)})
     standardize_json(user)
     return json_util.dumps(user)
