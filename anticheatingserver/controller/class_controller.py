@@ -131,7 +131,7 @@ def get_list_classes(current_user):
         aggregation.append({'$sort': {q_sort[0]: q_sort[1]}})
     if first is not None and last is not None:
         aggregation.append({'$skip': first})
-        aggregation.append({'$limit': last-first})
+        aggregation.append({'$limit': last-first+1})
     classes = mongo.db.classes.aggregate(aggregation)
     if current_user["role"] == USER_ROLE_SUPERVISOR:
         count_classes = mongo.db.classes.count_documents({

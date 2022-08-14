@@ -260,7 +260,7 @@ def get_list_users(current_user):
     if q_sort:
         users = users.sort(*q_sort)
     if first is not None and last is not None:
-        users = users.skip(first).limit(last-first)
+        users = users.skip(first).limit(last-first+1)
     result = []
     for user in users:
         standardize_json(user)
